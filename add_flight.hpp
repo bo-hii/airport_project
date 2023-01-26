@@ -1,7 +1,7 @@
 //بهاره دهقانی
 //شماره دانشجويي : 40011973
 //فاز دوم پروژه درس مبانی کامپیوتر و برنامه سازی
-//1400.10.8-1400.10.17
+//1400.10.8-1400.11.04
 // استاد درس :دکتر مهدی یزدیان دهکردی
 //پروژه هواپيما
 //داشبورد كاربر عادي
@@ -177,9 +177,8 @@ int recive_flight_destination()
     int value = 1;
     while (value == 1)
     {
-        cin.get();
         cout << "\n Destination (maximum 50 charactors) : ";
-        gets(flight[count_flight].destination);
+        cin >> flight[count_flight].destination;
         if (strlen(flight[count_flight].destination) > 50)
             value = warning2();
 

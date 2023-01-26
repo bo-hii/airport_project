@@ -4,15 +4,17 @@
 //1400/10/8-1400/10/17
 // استاد درس :دکتر مهدی یزدیان دهکردی
 //پروژه هواپيما
-//داشبورد كاربر عادي
+//خرید بلیط
 #ifndef BUY_TICKET_H
 #define BUY_TICKET_H
 
 #include "commen_library.hpp"
+#include "buy_indirect_ticket.hpp"
+
 //-----------------------------------
 void buy_ticket_menu(int active_user_i);
 //این تابع منو خرید بلیط است
-void recive_origine_and_destination(char origine[], char destination[]);
+void recive_origin_and_destination(char origin[], char destination[]);
 //این تابع مبدا و مقصد را از کاربر دریافت میکند
 
 bool ticket_list(char origin[], char destination[]);
@@ -20,11 +22,15 @@ bool ticket_list(char origin[], char destination[]);
 void print_ticket_info1(int index);
 //(بدون ذکر مبدا و مقصد)اين تابع مشخصات يك بليط را چاپ ميكند
 
-int buy_ticket(char origine[], char destination[]);
+int buy_ticket(char origin[], char destination[]);
 //اين تابع براي خريد بليط توسط كاربر عادي است
 
-int check_input_ID(long long int id, char origine[], char destination[]);
+int check_input_ID(long long int id, char origin[], char destination[]);
 // این تابع برسی میکند که عددی که به عنوان ورودی به آن داده شده شناسه کدام پرواز است و اندیس آن را باز میگرداند
+
+bool ask_indirect_ticket(char origin[], char destination[]);
+// این تابع از کاربر میپرسد که آیا مایل به خرید پرواز غیر مستقیم هست یا نه
+
 //------------------------------------
 void buy_ticket_menu(int active_user_index)
 //این تابع منو خرید بلیط است
@@ -33,13 +39,13 @@ void buy_ticket_menu(int active_user_index)
     char origin[max_large_data_len], destination[max_large_data_len];
     cout << "\n Buy ticket : \n";
 
-    recive_origine_and_destination(origin, destination);
+    recive_origin_and_destination(origin, destination);
 
     if (ticket_list(origin, destination))
     {
         index = buy_ticket(origin, destination); //اندیس پرواز مورد نظر (خریداری شده)کاربر
         system("cls");
-
+        
         if (index != -1)
         {
             cout << "\n YOU have successfully purchased the ticket with ID : " << flight[index].id << " :) \n";
@@ -53,14 +59,19 @@ void buy_ticket_menu(int active_user_index)
             //به تعداد مسافران پرواز مورد نظر یکی اضافه میکند
         }
     }
+    else
+    {
+        if (ask_indirect_ticket(origin, destination))
+            buy_indirect_ticket(origin, destination, active_user_index);
+    }
 }
 //------------------------------------
-void recive_origine_and_destination(char origine[], char destination[])
+void recive_origin_and_destination(char origin[], char destination[])
 //این تابع مبدا و مقصد را از کاربر دریافت میکند
 {
     cin.get();
     cout << "\n Origin : ";
-    gets(origine);
+    gets(origin);
     cout << "\n Destinationn : ";
     gets(destination);
     system("cls");
@@ -69,7 +80,6 @@ void recive_origine_and_destination(char origine[], char destination[])
 bool ticket_list(char origin[], char destination[])
 //اين تابع ليست بليط ها با مبدا و مقصد وارد شده را چاپ ميكند
 {
-    bool value = true;
     int count = 0;
     cout << "\n From " << origin << " to " << destination << " flights : \n";
     for (int i = 0; i < count_flight; i++)
@@ -88,12 +98,10 @@ bool ticket_list(char origin[], char destination[])
     }
     if (count == 0)
     {
-        cout << "\n There are no flights .\n\n";
-        value = false;
-        system("pause");
-        system("cls");
+        cout << "\n There are no direct flights .\n\n";
+        return false;
     }
-    return value;
+    return true;
 }
 //------------------------------------
 void print_ticket_info1(int index)
@@ -107,39 +115,52 @@ void print_ticket_info1(int index)
          << "\n __________________________________________________________________\n";
 }
 //--------------------------------------
-int buy_ticket(char origine[], char destination[])
+int buy_ticket(char origin[], char destination[])
 //اين تابع براي خريد بليط توسط كاربر عادي است
 //که از کاربر یک عدد دریافت میکند اگر برابر صفر بود کاربر را به داشبورد کاربر عادی باز میگیرد
 //اگر نه برسی میکند که برابر شناسه هیچ یک از پرواز های انتخاب شده هست یا نه
 {
+    char str[max_data_len];
     int value = 1, index;
     long long int command;
+
     while (value == 1)
     {
-        cout << "\n Please enter the ticket ID you want to buy"
+        cout << "\n Please enter the flight ID you want to buy"
              << "\n If you want to return to user dashboard enter ( 0 ) "
              << "\n >> ";
-        cin >> command;
-        if (command == 0)
-            return -1;
+        cin >> str;
 
-        index = check_input_ID(command, origine, destination);
-
-        if (index == -1) //اگر شناسه وجود نداشت
-            value = warning2();
+        if (not_being_num(str, strlen(str)))
+        {
+            cout << "\a\n !!! warning : you are only allowed to enter numbers !!!"
+                 << "\n Please try again ";
+        }
         else
-            return index;
+        {
+            command = convert_char_to_num(str);
+
+            if (command == 0)
+                return -1;
+
+            index = check_input_ID(command, origin, destination);
+
+            if (index == -1) //اگر شناسه وجود نداشت
+                value = warning2();
+            else
+                return index;
+        }
     }
     return -1; //مقداری که توسط تابع هشدار باز گردانده شده 2 بوده است که از حلقه خارج شده
 }
 //--------------------------------------
-int check_input_ID(long long int id, char origine[], char destination[])
+int check_input_ID(long long int id, char origin[], char destination[])
 // این تابع برسی میکند که عددی که به عنوان ورودی به آن داده شده شناسه کدام پرواز است و اندیس آن را باز میگرداند
 //اگر آن شناسه در بین پرواز های انتخاب شده نبود -1 باز میگرداند
 {
     for (int i = 0; i < count_flight; i++)
     {
-        if (strcmp(flight[i].origin, origine) == 0)
+        if (strcmp(flight[i].origin, origin) == 0)
         {
             if (strcmp(flight[i].destination, destination) == 0)
             {
@@ -152,6 +173,40 @@ int check_input_ID(long long int id, char origine[], char destination[])
         }
     }
     return -1;
+}
+//---------------------------------------
+bool ask_indirect_ticket(char origin[], char destination[])
+// این تابع از کاربر میپرسد که آیا مایل به خرید پرواز غیر مستقیم هست یا نه
+{
+    char str[max_data_len];
+    int command;
+    while (true)
+    {
+        cout << "do you want to buy indirect flights from " << origin << " to " << destination << " ?"
+             << "\n 1-Yas \t 2-No \n >> ";
+        cin >> str;
+        system("cls");
+
+        if (not_being_num(str, strlen(str)))
+        {
+            cout << "\a\n !!! warning : you are only allowed to enter numbers !!!"
+                 << "\n Please try again ";
+        }
+        else
+        {
+            command = convert_char_to_num(str);
+            switch (command)
+            {
+            case 1:
+                return true;
+            case 2:
+                return false;
+            default:
+                cout << "\a\n !!! warning : you are not allowed to select this !!!"
+                     << "\n Please try again ";
+            }
+        }
+    }
 }
 //------------------------------------
 #endif

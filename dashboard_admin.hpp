@@ -1,7 +1,7 @@
 //بهاره دهقانی
 //شماره دانشجويي : 40011973
 //فاز دوم پروژه درس مبانی کامپیوتر و برنامه سازی
-//1400.10.8-1400.10.17
+//1400.10.8-1400.11.04
 // استاد درس :دکتر مهدی یزدیان دهکردی
 //پروژه هواپيما
 //داشبورد كاربر مدير
@@ -10,6 +10,7 @@
 
 #include "sing_up_admin.hpp"
 #include "add_flight.hpp"
+#include "cancel_flight.hpp"
 
 //----------------------------------
 int admin_dashoard(int active_admin_index);
@@ -52,7 +53,7 @@ int admin_dashoard(int active_admin_index)
 
         if (not_being_num(str, strlen(str)))
         {
-            cout << "\a\n !!! warning : You are not allowed to select this !!!"
+            cout << "\a\n !!! warning : you are only allowed to enter numbers !!!"
                  << "\n Please try again ";
         }
         else
@@ -73,9 +74,12 @@ int admin_dashoard(int active_admin_index)
             case 4: //مشاهده ي پرواز ها
                 view_flights1();
                 break;
-            case 5: //بازگشت به منوی کاربر مدیر
+            case 5: //لغو پرواز
+                cancel_flight_menu();
+                break;
+            case 6: //بازگشت به منوی کاربر مدیر
                 return 2;
-            case 6: //برگشت به منوي اصلي
+            case 7: //برگشت به منوي اصلي
                 return 3;
             default:
                 cout << "\a\n !!! warning : you are not allowed to select this !!!"
@@ -94,8 +98,9 @@ void print_admin_dashoard()
          << "\n 2 : Flight statistics"
          << "\n 3 : Ticket confirmation"
          << "\n 4 : View flights"
-         << "\n 5 : Log out and Return to the admin panel"
-         << "\n 6 : Log out and Return to the main menu"
+         << "\n 5 : Cancel flight"
+         << "\n 6 : Log out and Return to the admin panel"
+         << "\n 7 : Log out and Return to the main menu"
          << "\n PLease enter the related number of each command you want : ";
 }
 //-----------------------------------------------
@@ -234,13 +239,15 @@ void view_flights1()
 //این تابع منوی مربوط مشاهده ی پرواز ها توسط کاربر مدیراست
 {
     cout << "\n View flights : \n";
-    for (int i = 0; i < count_flight; i++)
-    {
-        print_flight_info2(i);
-    }
+
     if (count_flight == 0)
     {
         cout << "\n No flights are registered in the system . \n \n";
+    }
+
+    for (int i = 0; i < count_flight; i++)
+    {
+        print_flight_info2(i);
     }
     system("pause");
     system("cls");
@@ -259,5 +266,6 @@ void print_flight_info2(int index)
          << "\n Capacity : " << flight[index].capacity
          << "\n __________________________________________________________________\n";
 }
+
 //---------------------------------------------
 #endif

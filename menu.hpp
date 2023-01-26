@@ -1,10 +1,10 @@
 //بهاره دهقانی
 //شماره دانشجويي : 40011973
 //فاز دوم پروژه درس مبانی کامپیوتر و برنامه سازی
-//1400.10.8-1400.10.17
+//1400.10.8-1400.11.04
 // استاد درس :دکتر مهدی یزدیان دهکردی
 //پروژه هواپيما
-//ثبت نام كاربر مدير
+//منو
 #ifndef NENU_H
 #define MENU_H
 
@@ -37,7 +37,7 @@ void admin_panel()
 
         if (not_being_num(str, strlen(str)))
         {
-            cout << "\a\n !!! warning : You are not allowed to select this !!!"
+            cout << "\a\n !!! warning : you are only allowed to enter numbers !!!"
                  << "\n Please try again ";
         }
         else
@@ -78,7 +78,7 @@ void user_panel()
 
         if (not_being_num(str, strlen(str)))
         {
-            cout << "\a\n !!! warning : You are not allowed to select this !!!"
+            cout << "\a\n !!! warning : you are only allowed to enter numbers !!!"
                  << "\n Please try again ";
         }
         else

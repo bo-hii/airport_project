@@ -1,7 +1,7 @@
 //بهاره دهقانی
 //شماره دانشجويي : 40011973
 //فاز دوم پروژه درس مبانی کامپیوتر و برنامه سازی
-//1400.10.8-1400.10.17
+//1400.10.8-1400.11.04
 // استاد درس :دکتر مهدی یزدیان دهکردی
 //پروژه هواپيما
 //كتابخانه مشترك
@@ -12,11 +12,11 @@
 #include <iostream>
 using namespace std;
 
-#define max_data_len 30
-#define max_large_data_len 60
-#define max_flight_count 100
+#define max_data_len 40
+#define max_large_data_len 70
+#define max_flight_count 10
 #define max_admin_count 10
-#define max_user_count 200
+#define max_user_count 20
 #define max_flight_capacity 250
 //--------------------------------------تعريف ركورد ها
 struct DATE //تاريخ
@@ -78,6 +78,7 @@ bool not_being_num(char str[], int n);
 //اين تابع چك ميكند كه كاراكتر ورودي  شامل كاراكتر هاي غير عددي هست يا خير
 bool powerless_pass(char pass[]);
 //اين تابع چك ميكند كه آيا پسورد انتخابي توسط كاربر قوي هست يا نه
+
 bool invalied_phone_number(char phone_num[]);
 //اين تابع چك ميكند كه آيا شماره تلفن ورودي كاربر مجاز است يا نه
 
@@ -88,6 +89,9 @@ void Print_warning2();
 
 long long int convert_char_to_num(char str[]);
 // اين تابع يك آرايه كاراكتري كه قبلا چك شده فقط شامل عدد است را گرفته و نوع آن را به عدد صحيح تغيير ميدهد
+
+void print_ticket_info2(int index);
+//( بدون ذکر ظرفیت باقی مانده)اين تابع مشخصات يك بليط را چاپ ميكند
 
 //--------------------------------------
 int recive_first_name(char f_name[])
@@ -120,9 +124,8 @@ int recive_last_name(char l_name[])
     int value = 1;
     while (value == 1)
     {
-        cin.get();
         cout << "\n Last Name (maximum 25 charactors) : ";
-        gets(l_name);
+        cin >> l_name;
         if (strlen(l_name) > 25)
             value = warning();
 
@@ -167,7 +170,9 @@ int recive_Password(char pass[])
         if (len < 5 || 25 < len || powerless_pass(pass))
         {
             cout << "\n Your password must be between 5 and 25 charactors long"
-                 << "\n and contain at least a small letter, a captal letter, a number and one other charactor . \n\n";
+                 << "\n and contain at least a small letter, a captal letter, a number and one other charactor.\n"
+                 << "\n you can choose : Airplain_pass_" << pass << "2022"
+                 << " or @Airplain_" << pass << "2022\n";
             value = warning();
         }
         else
@@ -210,7 +215,7 @@ int warning()
 
         if (not_being_num(str, strlen(str)))
         {
-            cout << "\n !!! Warning : You are not allowed to select this !!!"
+            cout << "\a\n !!! warning : you are only allowed to enter numbers !!!"
                  << "\n Please try again ";
         }
         else
@@ -319,7 +324,7 @@ int warning2()
 
         if (not_being_num(str, strlen(str)))
         {
-            cout << "\n !!! Warning : You are not allowed to select this !!!"
+            cout << "\a\n !!! warning : you are only allowed to enter numbers !!!"
                  << "\n Please try again ";
         }
         else
@@ -375,5 +380,18 @@ long long int convert_char_to_num(char str[])
     }
     return num;
 }
+//---------------------------------------------------
+void print_ticket_info2(int index)
+//( بدون ذکر ظرفیت باقی مانده)اين تابع مشخصات يك بليط را چاپ ميكند
+{
+    cout << "\n Flight ID : " << flight[index].id
+         << "\n From : " << flight[index].origin
+         << "\n To : " << flight[index].destination
+         << "\n Date : " << flight[index].date.year << " / " << flight[index].date.month << " / " << flight[index].date.day
+         << "\n Time : " << flight[index].time.hour << " : " << flight[index].time.minute
+         << "\n Airline Name : " << flight[index].airline_name
+         << "\n ___________________________________________________________\n";
+}
+
 //--------------------------------------------------------
 #endif
